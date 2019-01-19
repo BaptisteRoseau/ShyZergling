@@ -1,0 +1,91 @@
+Skip to content
+ 
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ @Shynamo Sign out
+118
+1,386 254 Blizzard/s2client-api
+ Code  Issues 77  Pull requests 9  Projects 0  Wiki  Insights
+s2client-api/.gitignore
+92795ca  on 22 Nov 2017
+@jrepp jrepp Updating .gitignore for any build_ type
+@jrepp @sc2automation
+     
+61 lines (44 sloc)  383 Bytes
+*.slo
+*.lo
+*.o
+*.obj
+
+*.gch
+*.pch
+
+*.so
+*.dylib
+*.dll
+
+*.lai
+*.la
+*.a
+*.lib
+
+*.exe
+*.out
+*.app
+
+build/
+build_*/
+
+*.swp
+
+*.pyc
+__pycache__
+
+protocol/*.cc
+protocol/*.h
+tags
+tatus
+
+game_settings.ini
+
+CMakeFiles
+cmake.msi
+
+x64/
+
+make_clean.bat
+make_again.bat
+
+*.suo
+*.user
+*.ncb
+Debug/
+Release/
+CodeAnalyst/
+.vs/
+
+project/include
+project/lib
+
+.DS_Store
+
+docs/html
+docs/latex
+doxygen.log
+© 2019 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Press h to open a hovercard with more details.
