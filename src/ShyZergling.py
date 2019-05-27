@@ -1,100 +1,77 @@
 from functools import reduce
 from operator import or_
 import random
+from asyncio import PriorityQueue
 
 import sc2
 from sc2 import Race, Difficulty
-from sc2.constants import *
 from sc2.player import Bot, Computer
 from sc2.data import race_townhalls
+from sc2.constants import LARVA, DRONE, OVERLORD
 
 import enum
 
+DFLT_PRIO = 0 # Default priority for the queues
+
 class ShyZergling(sc2.BotAI):
     def __init__(self):
-        self._larvae = None
+        self.building_queue = PriorityQueue()
+        self.unit_queue = PriorityQueue()
 
-    def select_target(self):
-        if self.known_enemy_structures.exists:
-            return random.choice(self.known_enemy_structures).position
 
-        return self.enemy_start_locations[0]
-    
-    async def queens_injections(self):
-        """ Realises queens injections for each base. """
-        available_queens = set(self.units(QUEEN).idle)
-        for base in self.townhalls:
-            if base.is_ready:
-                #TODO If not already injected
-                #TODO Select nearest queen
-                for queen in available_queens:
-                    abilities = await self.get_available_abilities(queen)
-                    if AbilityId.EFFECT_INJECTLARVA in abilities:
-                        available_queens.remove(queen)
-                        await self.do(queen(EFFECT_INJECTLARVA, base))
-                        print("injection")
-                        break
+    def debug(self, iteration):
+        if iteration % 200 == 0:
+            print("BUILDING QUEUE:", self.building_queue)
+            print("UNIT QUEUE:", self.unit_queue)
+            print("DRONE AMOUNT", len(self.units(DRONE)))
+            print()
 
-    async def expand_mucus(self):
-        """ Expands the mucus on the map as much as possible """
-        # Choisir le meilleur endroit d'expend pour chaque tumeur(DL)
-        # Choisir 1 ou 2 queens pour répendre le mucus
-        # Si la tumeur est attaquée, cancel la capacité
-        pass
-
-    async def build_supply_unit(self):
-        """ Creates the supply unit for this bot race (Overlord) if necessary """
-        if self.supply_left < 2:
-            if self.can_afford(OVERLORD) and self._larvae.exists:
-                await self.do(self._larvae.random.train(OVERLORD))
-                return
-
-    async def drone_reassignation(self):
-        """ Reassing drones from over-saturated bases to under-saturated bases """
-        # Assigning unassigned drones to collecting
-        for drone in self.units(DRONE):
-            if drone.is_idle:
-                drone.gather(self.state.mineral_field.closest_to(drone.position))
-        return
+    #### MAIN PROCESS
 
     async def on_step(self, iteration):
-        self._larvae = self.units(LARVA)
+        self.larvae = self.units(LARVA)
+        await self.build_drones()
+        await self.extend_supply()
+        await self.distribute_workers()
+        await self.build_from_queues()
+        self.debug(iteration)
 
-        # Recurrent behaviors
-        await self.queens_injections()
-        await self.expand_mucus()
-        await self.build_supply_unit()
-        await self.drone_reassignation()
+    #### SUBFUNCTIONS
 
-        # Creating a loooooooot of drones
-        for base in self.townhalls:
-            if base.assigned_harvesters < base.ideal_harvesters:
-                if self.can_afford(DRONE) and self._larvae.exists:
-                    larva = self._larvae.random
-                    await self.do(larva.train(DRONE))
-                    print("created drone, having", len(self.units(DRONE)), "on", len(self.townhalls), "bases at", self.time_formatted, "with", self.minerals, "minerals, queens", len(self.units(QUEEN)))
-                    return
+    # Unit queues
+    async def build_from_queues(self):
+        await self.build_buildings()
+        await self.build_units()
         
-        if not (self.units(SPAWNINGPOOL).exists or self.already_pending(SPAWNINGPOOL)):
-            if self.can_afford(SPAWNINGPOOL):
-                await self.build(SPAWNINGPOOL, near=self.townhalls.first)
-                print("created spawning pool")
+    async def build_buildings(self):
+        while not self.building_queue.empty():
+            building = self.building_queue.get_nowait()[1]
+            drones = self.units(DRONE)
+            if self.can_afford(building) and drones.exists:
+                await self.do(drones.random.build(building, near=self.townhalls.first))
 
-        #if self.state.resources.mineral > 300:
-        if self.units(SPAWNINGPOOL).ready.exists and self.can_afford(QUEEN):
-            base = self.townhalls.random
-            if base.is_ready and base.noqueue:
-                await self.do(base.train(QUEEN))
-                print("created queen, having", len(self.units(QUEEN)))
+    async def build_units(self):
+        while not self.unit_queue.empty():
+            unit = self.unit_queue.get_nowait()[1]
+            if self.can_afford(unit) and self.larvae.exists:
+                await self.do(self.larvae.random.train(unit))
 
-        await self.expand_now()
-        
+    # Building things
+    async def extend_supply(self):
+        if self.supply_left < 2:
+            await self.unit_queue.put((DFLT_PRIO, OVERLORD))
+            return
+
+    async def build_drones(self):
+        if len(self.units(DRONE)) < 16:
+            await self.unit_queue.put((DFLT_PRIO, DRONE))
+            return
+
 def main():
-    sc2.run_game(sc2.maps.get("BloodBoilLE"), [
+    sc2.run_game(sc2.maps.get("CatalystLE"), [
         Bot(Race.Zerg, ShyZergling()),
         Computer(Race.Terran, Difficulty.Easy)
-    ], realtime=False, save_replay_as="replays/ShyZerglingVSBot.SC2Replay")
+    ], realtime=False)
 
 if __name__ == '__main__':
     main()
-        
