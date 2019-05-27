@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Misc
 .DS_Store
 
@@ -23,3 +24,65 @@ mini_games/
 # Editors
 .idea/
 .vscode/
+=======
+*.slo
+*.lo
+*.o
+*.obj
+
+*.gch
+*.pch
+
+*.so
+*.dylib
+*.dll
+
+*.lai
+*.la
+*.a
+*.lib
+
+*.exe
+*.out
+*.app
+
+build/
+build_*/
+
+*.swp
+
+*.pyc
+__pycache__
+
+protocol/*.cc
+protocol/*.h
+tags
+tatus
+
+game_settings.ini
+
+CMakeFiles
+cmake.msi
+
+x64/
+
+make_clean.bat
+make_again.bat
+
+*.suo
+*.user
+*.ncb
+Debug/
+Release/
+CodeAnalyst/
+.vs/
+
+project/include
+project/lib
+
+.DS_Store
+
+docs/html
+docs/latex
+doxygen.log
+>>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
