@@ -27,6 +27,23 @@ sudo cp build/bin/libsc2protocol.a /opt/local/lib/sc2api
 sudo cp build/bin/libsc2utils.a /opt/local/lib/sc2api
 cd ..
 echo "Headers libraries' installation done"
+<<<<<<< HEAD
+
+#Installing s2client-proto
+echo "Installing s2client-proto"
+git clone --recursive https://github.com/Blizzard/s2client-proto && cd s2client-proto
+echo "wget https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip \
+unzip protoc-3.4.0-linux-x86_64.zip -d protoc3 && \
+cp -r protoc3/bin/* /usr/bin/ && \
+cp -r protoc3/include/* /usr/include/ && \
+rm -rf protoc*" > install_protoc.sh
+chmod 755 ./install_protoc.sh
+sudo ./install_protoc.sh
+sudo python setup.py build
+sudo python setup.py install
+cd ..
+=======
+>>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
 
 #Redirecting to SC2 Data and Maps download page
 echo "Download SC2 Data and Maps at the following page :
@@ -39,3 +56,7 @@ mkdir StarCraftII/SC2Data
 mkdir StarCraftII/Versions
 sart "" https://github.com/Blizzard/s2client-proto/blob/master/README.md#linux-packages
 cd ShyZergling/
+<<<<<<< HEAD
+
+=======
+>>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
