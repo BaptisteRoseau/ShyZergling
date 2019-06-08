@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Misc
 .DS_Store
 
@@ -24,7 +23,6 @@ mini_games/
 # Editors
 .idea/
 .vscode/
-=======
 *.slo
 *.lo
 *.o
@@ -85,4 +83,3 @@ project/lib
 docs/html
 docs/latex
 doxygen.log
->>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
