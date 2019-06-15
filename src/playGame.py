@@ -6,6 +6,7 @@ from ShyZergling import ShyZergling
 from emptyBot import EmptyBot
 
 import random
+from datetime import datetime 
 
 maps = [
     "AbiogenesisLE",
@@ -27,7 +28,6 @@ maps = [
     "KairosJunctionLE",
     "KingsCoveLE",
     "MechDepotLE",
-    "mini_games",
     "NeonVioletSquareLE",
     "NewRepugnancyLE",
     "OdysseyLE",
@@ -37,11 +37,13 @@ maps = [
     "YearZeroLE"
 ]
 
+replay_name = "replays/" + datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + ".SC2Replay"
+
 def main():
     sc2.run_game(sc2.maps.get(maps[random.randint(0, len(maps) - 1)]), [
         Bot(Race.Zerg, ShyZergling()),
-        Computer(Race.Terran, Difficulty.Easy)
-    ], realtime=False, save_replay_as="ZvT.SC2Replay")
+        Computer(Race.Terran, Difficulty.Medium)
+    ], realtime=False, save_replay_as=replay_name)
 
 if __name__ == '__main__':
     main()

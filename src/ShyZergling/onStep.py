@@ -1,11 +1,10 @@
 import sc2
-from sc2.data import race_townhalls
+from sc2.data import race_gas, race_worker, race_townhalls, ActionResult, Attribute, Race
 from sc2.player import BotAI
 from sc2.constants import LARVA, DRONE, OVERLORD, QUEEN, CREEPTUMOR, SPAWNINGPOOL,\
-    HATCHERY, EFFECT_INJECTLARVA, CANCEL, EXTRACTOR
+    HATCHERY, EFFECT_INJECTLARVA, CANCEL, EXTRACTOR, CREEPTUMORBURROWED, CREEPTUMORQUEEN
 
 # ShyZergling Class imported methods
-from .expendCreep import expend_creep
 
 #===========================================================#
 #                      MAIN FUNCTION                        #
@@ -15,6 +14,7 @@ async def on_step(self, iteration):
     if iteration == 5:
         await self.chat_send("gl hf")
     self.larvae = self.units(LARVA)
+    self.queens = self.units(QUEEN)
     self.townhalls_ready  = self.townhalls.ready
     await self.debug(iteration) # Debug here
     await self.distribute_workers()
@@ -37,7 +37,7 @@ async def debug(self, iteration):
         print("Base amount:",  self.townhalls.amount)
         print("Drone amount:", self.units(DRONE).amount)
         print("Queen amount:", self.units(QUEEN).amount)
-        print("Tumour amount:",self.units(CREEPTUMOR).amount)
+        print("Tumour amount:", self.units(CREEPTUMORBURROWED).amount + self.units(CREEPTUMORQUEEN).amount + self.units(CREEPTUMOR).amount)
         print()
 
 async def injections(self):
