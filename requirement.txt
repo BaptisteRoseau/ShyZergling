@@ -1,0 +1,4 @@
+burnysc2
+numpy
+opencv-python
+matplotlib
