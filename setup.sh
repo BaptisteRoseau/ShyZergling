@@ -27,7 +27,6 @@ sudo cp build/bin/libsc2protocol.a /opt/local/lib/sc2api
 sudo cp build/bin/libsc2utils.a /opt/local/lib/sc2api
 cd ..
 echo "Headers libraries' installation done"
-<<<<<<< HEAD
 
 #Installing s2client-proto
 echo "Installing s2client-proto"
@@ -42,8 +41,6 @@ sudo ./install_protoc.sh
 sudo python setup.py build
 sudo python setup.py install
 cd ..
-=======
->>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
 
 #Redirecting to SC2 Data and Maps download page
 echo "Download SC2 Data and Maps at the following page :
@@ -54,9 +51,5 @@ mkdir StarCraftII/Maps
 mkdir StarCraftII/Replays
 mkdir StarCraftII/SC2Data
 mkdir StarCraftII/Versions
-sart "" https://github.com/Blizzard/s2client-proto/blob/master/README.md#linux-packages
-cd ShyZergling/
-<<<<<<< HEAD
 
-=======
->>>>>>> 745455f4e3012f64aaa05b7bdaae69795e60c0e5
+cd ShyZergling/
